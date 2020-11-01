@@ -12,17 +12,21 @@ namespace quiz_backend.Controllers
     public class QuestionsController : Controller
     {
         readonly QuizContext context;
+
         public QuestionsController(QuizContext context)
         {
             this.context = context;
         }
+
         [HttpGet]
         public IEnumerable<Models.Question> Get()
         {
             return new Models.Question[] {
-                new Models.Question(){ Text = "Hello!"}
+                new Models.Question() { Text = "hello"},
+                new Models.Question() { Text = "hi"}
             };
         }
+
         [HttpPost]
         public void Post([FromBody]Models.Question question)
         {
