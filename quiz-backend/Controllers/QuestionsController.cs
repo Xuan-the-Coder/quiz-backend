@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.OData.Query.SemanticAst;
 using Microsoft.EntityFrameworkCore;
 
 namespace quiz_backend.Controllers
@@ -25,9 +26,19 @@ namespace quiz_backend.Controllers
             return context.Questions;
         }
 
+        [HttpGet("{quizId}")]
+        public IEnumerable<Models.Question> Get([FromRoute] int quizId) 
+        {
+            return context.Questions.Where(q => q.QuizId == quizId);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Post([FromBody]Models.Question question)
         {
+            var quiz = context.Quiz.SingleOrDefault(q => q.ID == question.QuizId);
+
+            if (quiz == null)
+                return NotFound();
             context.Questions.Add(question);
             await context.SaveChangesAsync();
             return Ok(question);
